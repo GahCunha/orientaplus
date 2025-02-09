@@ -11,7 +11,7 @@ export default function Home() {
       />
       
       <Title>TELA INICIAL</Title>
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
     </Container>
     </>
   );
