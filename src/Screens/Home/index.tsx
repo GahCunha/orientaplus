@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <>
     <Container>
-      <Image source={require('../../assets/logo.png')} 
+      <Image source={require('@assets/logo.png')} 
       style={{ width: 200, height: 200 }}
       />
       
