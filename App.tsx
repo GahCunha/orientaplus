@@ -1,13 +1,13 @@
 import { ThemeProvider } from 'styled-components/native';
 import theme from './src/global/theme';
-import Home from './src/Screens/Home';
+import Home from './src/screens/Home';
 import { Inter_300Light, Inter_400Regular, useFonts } from '@expo-google-fonts/inter';
 import { Roboto_700Bold, Roboto_100Thin } from '@expo-google-fonts/roboto';
 import { Loading } from './src/components/Loading';
 
-import TestScreen1 from './src/Screens/TestScreen1';
-import TestScreen2 from './src/Screens/TestScreen2';
-import TestScreen3 from './src/Screens/TestScreen3';
+import TestScreen1 from './src/screens/TestScreen1';
+import TestScreen2 from './src/screens/TestScreen2';
+import TestScreen3 from './src/screens/TestScreen3';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
