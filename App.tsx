@@ -8,12 +8,14 @@ import { Loading } from './src/components/Loading';
 import TestScreen1 from './src/screens/TestScreen1';
 import TestScreen2 from './src/screens/TestScreen2';
 import TestScreen3 from './src/screens/TestScreen3';
+import LoginScreen from './src/screens/Login';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 
-
-const Tab = createBottomTabNavigator()
+const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -28,12 +30,19 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <NavigationContainer>
-        <Tab.Navigator screenOptions={{ headerShown: false }}>
-          <Tab.Screen name="Home" component={Home} />
-          <Tab.Screen name="TesteScreen1" component={TestScreen1} />
-          <Tab.Screen name="TesteScreen2" component={TestScreen2} />
-          <Tab.Screen name="TesteScreen3" component={TestScreen3} />
-        </Tab.Navigator>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Main">
+            {() => (
+              <Tab.Navigator screenOptions={{ headerShown: false }}>
+                <Tab.Screen name="Home" component={Home} />
+                <Tab.Screen name="TesteScreen1" component={TestScreen1} />
+                <Tab.Screen name="TesteScreen2" component={TestScreen2} />
+                <Tab.Screen name="TesteScreen3" component={TestScreen3} />
+              </Tab.Navigator>
+            )}
+          </Stack.Screen>
+        </Stack.Navigator>
       </NavigationContainer>
     </ThemeProvider>
   );
