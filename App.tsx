@@ -7,7 +7,6 @@ import { Loading } from './src/components/Loading';
 
 import TestScreen1 from './src/screens/TestScreen1';
 import TestScreen2 from './src/screens/TestScreen2';
-import TestScreen3 from './src/screens/TestScreen3';
 import LoginScreen from './src/screens/Login';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -38,7 +37,6 @@ export default function App() {
                 <Tab.Screen name="Home" component={Home} />
                 <Tab.Screen name="TesteScreen1" component={TestScreen1} />
                 <Tab.Screen name="TesteScreen2" component={TestScreen2} />
-                <Tab.Screen name="TesteScreen3" component={TestScreen3} />
               </Tab.Navigator>
             )}
           </Stack.Screen>
