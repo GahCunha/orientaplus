@@ -13,9 +13,22 @@ import LoginScreen from './src/screens/Login';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
+import AppointmentDetails from 'src/screens/AppointmentDetails';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+const AgendaStack = createStackNavigator();
+
+
+// 🔹 Stack Navigator para a aba "Agenda"
+function AgendaStackScreen() {
+  return (
+    <AgendaStack.Navigator screenOptions={{ headerShown: false }}>
+      <AgendaStack.Screen name="TestScreen1" component={TestScreen1} />
+      <AgendaStack.Screen name="AppointmentDetails" component={AppointmentDetails} />
+    </AgendaStack.Navigator>
+  );
+}
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -57,7 +70,7 @@ export default function App() {
                     />
                   ),
                 }}/>
-                <Tab.Screen name="TesteScreen1" component={TestScreen1} 
+                <Tab.Screen name="Agenda" component={AgendaStackScreen} 
                 options={{
                   tabBarIcon: ({ focused }) => (
                     <Image
