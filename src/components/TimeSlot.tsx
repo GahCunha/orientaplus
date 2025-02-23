@@ -1,5 +1,6 @@
 import { TouchableOpacity, Text } from "react-native";
 import styled from "styled-components/native";
+import theme from "src/global/theme";
 
 interface TimeSlotProps {
     time: string;
@@ -18,15 +19,19 @@ export default function TimeSlot({ time, isSelected, onPress }: TimeSlotProps) {
 // Estilização
 const SlotButton = styled(TouchableOpacity) <{ isSelected: boolean }>`
   width: 100%;
+  height: 70px;
   padding: 15px;
   margin: 5px 0;
   border-radius: 10px;
   background-color: ${(props: { isSelected: boolean }) => (props.isSelected ? "#6A1B9A" : "#D3D3D3")};
   align-items: start;
+  justify-content: center;
 `;
 
 const SlotText = styled(Text) <{ isSelected: boolean }>`
-  font-size: 16px;
+  font-family: ${theme.fonts.bold};
+
+  font-size: 20px;
   font-weight: bold;
   color: ${(props: { isSelected: boolean }) => (props.isSelected ? "#fff" : "#333")};
 `;
