@@ -12,7 +12,12 @@ export default function LoginScreen() {
     console.log(`Login com ${provider}`);
     alert(`Login com ${provider}`);
     navigation.navigate("Main" as never);
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Main" }], 
+    });
   };
+
 
   return (
     <Container>

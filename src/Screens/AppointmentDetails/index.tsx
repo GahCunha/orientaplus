@@ -1,31 +1,69 @@
-import { View, Text, Button } from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useRoute } from "@react-navigation/native";
+import Header from "src/components/Header";
+import { useState } from "react";
+
+import {
+  ActionButton,
+  ButtonsContainer,
+  ButtonText,
+  Container,
+  DateContainer,
+  DayText,
+  HeaderCalendar,
+  MonthText,
+  SubjectContainer,
+  TimeText,
+  SubjectInput
+} from "./styles";
 
 export default function AppointmentDetails() {
   const route = useRoute();
-  const navigation = useNavigation();
 
-  // Garante que os parâmetros sempre tenham um valor padrão
-  const { date = "Data não informada", time = "Horário não informado", isNew = false, isPast = false } = route.params || {};
+  const { date, time, isNew, isPast, subject = "" } = route.params || {};
+
+
+  const [editableSubject, setEditableSubject] = useState(subject);
 
   return (
-    <View style={{ padding: 20 }}>
-      <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Detalhes do Agendamento</Text>
-      <Text>Data: {date}</Text>
-      <Text>Horário: {time}</Text>
+    <Container>
+      <Header />
 
-      {/* Se o agendamento já aconteceu, não exibe botões */}
+
+      <HeaderCalendar>
+        <DateContainer>
+          <MonthText>Dezembro</MonthText>
+          <DayText>{date.split("/")[0]}</DayText>
+        </DateContainer>
+        <TimeText>{time}</TimeText>
+      </HeaderCalendar>
+
+      <SubjectContainer isEditable={isNew || !isPast}>
+        <SubjectInput
+          value={editableSubject}
+          onChangeText={setEditableSubject}
+          editable={isNew || !isPast} 
+          placeholder="Digite o assunto..."
+          placeholderTextColor="#999"
+        />
+      </SubjectContainer>
+
+
       {!isPast && !isNew && (
-        <>
-          <Button title="Editar Agendamento" onPress={() => {}} />
-          <Button title="Cancelar Agendamento" onPress={() => {}} color="red" />
-        </>
+        <ButtonsContainer>
+          <ActionButton backgroundColor="#DDE5B6" onPress={() => console.log("Atualizar horário")}>
+            <ButtonText>Atualizar Horário</ButtonText>
+          </ActionButton>
+          <ActionButton backgroundColor="#333" onPress={() => console.log("Apagar horário")}>
+            <ButtonText color="#FFF">Apagar Horário</ButtonText>
+          </ActionButton>
+        </ButtonsContainer>
       )}
 
-      {/* Se for um novo agendamento, só exibe o botão de confirmar */}
-      {isNew && <Button title="Confirmar Agendamento" onPress={() => {}} />}
-
-      <Button title="Voltar" onPress={() => navigation.goBack()} />
-    </View>
+      {isNew && (
+        <ActionButton backgroundColor="#B7F4C1" onPress={() => console.log("Agendar horário")}>
+          <ButtonText>Agendar horário</ButtonText>
+        </ActionButton>
+      )}
+    </Container>
   );
 }

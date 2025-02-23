@@ -3,59 +3,53 @@ import { Container } from './styles';
 import Header from 'src/components/Header';
 import EventCard from 'src/components/EventCard';
 import EventGroup from 'src/components/EventGroup';
-import { MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Home() {
-  const eventCards: { title: string; date: string; time: string; iconName: keyof typeof MaterialIcons.glyphMap; onPress: () => void; }[] = [
+  const navigation = useNavigation();
+
+  const eventCards = [
     {
       title: "Assunto",
       date: "20/02/2025",
       time: "14:00",
       iconName: 'info',
-      onPress: () => { }
+      onPress: () => handleOpenAppointment("20/02/2025", "14:00", false)
     },
     {
       title: "Assunto",
-      date: "20/02/2025",
-      time: "14:00",
+      date: "19/02/2025",
+      time: "10:00",
       iconName: 'info',
-      onPress: () => { }
-    },
-    {
-      title: "Assunto",
-      date: "20/02/2025",
-      time: "14:00",
-      iconName: 'info',
-      onPress: () => { }
-    },
-    {
-      title: "Assunto",
-      date: "20/02/2025",
-      time: "14:00",
-      iconName: 'info',
-      onPress: () => { }
-    },
-    {
-      title: "Assunto",
-      date: "20/02/2025",
-      time: "14:00",
-      iconName: 'info',
-      onPress: () => { }
+      onPress: () => handleOpenAppointment("19/02/2025", "10:00", true)
     }
   ];
+
+
+  function handleOpenAppointment(date, time, isPast) {
+    navigation.navigate("AppointmentDetails", {
+      date,
+      time,
+      isNew: false,
+      isPast,
+    });
+  }
+
   return (
     <>
       <Container>
         <Header />
+        
         <EventGroup title="Atual">
           <EventCard
             title="Assunto"
             date="20/02/2025"
             time="14:00"
             iconName='edit'
-            onPress={() => { }}
+            onPress={() => handleOpenAppointment("20/02/2025", "14:00", false)}
           />
         </EventGroup>
+
         <EventGroup title="Histórico">
           {eventCards.map((event, index) => (
             <EventCard
@@ -64,13 +58,13 @@ export default function Home() {
               date={event.date}
               time={event.time}
               iconName={event.iconName}
-              onPress={event.onPress}
+              onPress={event.onPress} 
             />
           ))}
         </EventGroup>
+
         <StatusBar style="auto" />
       </Container>
     </>
   );
 }
-
