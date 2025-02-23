@@ -3,9 +3,10 @@ import { Container } from './styles';
 import Header from 'src/components/Header';
 import EventCard from 'src/components/EventCard';
 import EventGroup from 'src/components/EventGroup';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function Home() {
-  const eventCards = [
+  const eventCards: { title: string; date: string; time: string; iconName: keyof typeof MaterialIcons.glyphMap; onPress: () => void; }[] = [
     {
       title: "Assunto",
       date: "20/02/2025",
