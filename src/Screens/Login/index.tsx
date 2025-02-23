@@ -1,8 +1,7 @@
-import { View, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import styled from "styled-components/native";
 import LoginButton from "src/components/LoginButton";
 import theme from "src/global/theme";
+import { CalendarImage, Container } from "./styles";
 
 
 export default function LoginScreen() {
@@ -44,17 +43,3 @@ export default function LoginScreen() {
   );
 }
 
-// Styled Components
-const Container = styled(View)`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  background-color: #fff;
-  padding: 20px;
-`;
-
-const CalendarImage = styled(Image)`
-  width: 150px;
-  height: 150px;
-  margin-bottom: 40px;
-`;
