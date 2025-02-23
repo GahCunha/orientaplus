@@ -1,36 +1,41 @@
-import { StatusBar } from 'expo-status-bar';
-import { Container } from './styles';
-import Header from 'src/components/Header';
-import { Calendar } from 'react-native-calendars';
-import { useState } from 'react';
-import theme from 'src/global/theme';
+import { useState } from "react";
+import { StatusBar } from "expo-status-bar";
+import { Container } from "./styles";
+import Header from "src/components/Header";
+import { Calendar } from "react-native-calendars";
+import TimeSlot from "src/components/TimeSlot";
 
-export default function TestScreen1() {
-  const [selected, setSelected] = useState('');
+export default function AgendaScreen() {
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
 
-
-  const calendarTheme = {
-    selectedDayBackgroundColor: theme.colors.primary, 
-    todayTextColor: 'orange',
-    arrowColor: 'orange',
-    dotColor: 'orange',
-    todayDotColor: 'orange'
-  };
+  const availableTimes = ["13:10", "14:00", "15:20"];
 
   return (
     <>
       <Container>
         <Header />
+
         <Calendar
-          onDayPress={(day: { dateString: string }) => {
-        setSelected(day.dateString);
-        console.log('selected day', day);
-          }}
+          onDayPress={(day) => setSelectedDate(day.dateString)}
           markedDates={{
-        [selected]: { selected: true, disableTouchEvent: true, selectedDotColor: 'orange' }
+            [selectedDate]: {
+              selected: true,
+              disableTouchEvent: true,
+              selectedDotColor: "orange",
+            },
           }}
-          theme={calendarTheme} 
         />
+
+        {/* Lista de horários */}
+        {availableTimes.map((time) => (
+          <TimeSlot
+            key={time}
+            time={time}
+            isSelected={selectedTime === time}
+            onPress={() => setSelectedTime(time)}
+          />
+        ))}
         <StatusBar style="auto" />
       </Container>
     </>
