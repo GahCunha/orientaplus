@@ -6,7 +6,7 @@ interface EventCardProps {
     title: string;
     date: string;
     time: string;
-    iconName: string;
+    iconName: keyof typeof MaterialIcons.glyphMap;
     onPress: () => void;
 }
 
