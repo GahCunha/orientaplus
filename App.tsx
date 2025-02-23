@@ -6,14 +6,14 @@ import { Roboto_700Bold, Roboto_100Thin } from '@expo-google-fonts/roboto';
 import { Loading } from './src/components/Loading';
 import { Image } from 'react-native';
 
-import TestScreen1 from './src/screens/TestScreen1';
-import TestScreen2 from './src/screens/TestScreen2';
 import LoginScreen from './src/screens/Login';
 import AppointmentDetails from 'src/screens/AppointmentDetails';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
+import AppointmentScreen from './src/screens/Appoitment';
+import ConfigScreen from './src/screens/Config';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -34,7 +34,7 @@ function HomeStackScreen() {
 function AgendaStackScreen() {
   return (
     <AgendaStack.Navigator screenOptions={{ headerShown: false }}>
-      <AgendaStack.Screen name="TestScreen1" component={TestScreen1} />
+      <AgendaStack.Screen name="Appointment" component={AppointmentScreen} />
       <AgendaStack.Screen name="AppointmentDetails" component={AppointmentDetails} />
     </AgendaStack.Navigator>
   );
@@ -102,8 +102,8 @@ export default function App() {
                   }}
                 />
                 <Tab.Screen
-                  name="TesteScreen2"
-                  component={TestScreen2}
+                  name="Configurações"
+                  component={ConfigScreen}
                   options={{
                     tabBarIcon: ({ focused }) => (
                       <Image

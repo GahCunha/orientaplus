@@ -7,7 +7,7 @@ import TimeSlot from "src/components/TimeSlot";
 import { useNavigation } from "@react-navigation/native";
 import { Button } from "react-native";
 
-export default function TestScreen() {
+export default function AppointmentScreen() {
   const navigation = useNavigation();
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
