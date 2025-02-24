@@ -97,3 +97,17 @@ export const SubjectInput = styled.TextInput`
   background-color: ${theme.colors.neutral.secondary};
   border-radius: 8px;
 `;
+
+export const ModalContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.2);
+`;
+
+export const CloseButton = styled(TouchableOpacity)`
+  background-color: ${theme.colors.button.danger};
+  padding: 12px 20px;
+  border-radius: 10px;
+  margin-top: 10px;
+`;

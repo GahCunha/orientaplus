@@ -1,7 +1,9 @@
 import { useRoute } from "@react-navigation/native";
 import Header from "src/components/Header";
 import { useState } from "react";
-import Notification from "src/components/Notification"; // 🔹 Importando o componente de notificação
+import { Modal, TouchableOpacity } from "react-native";
+import Notification from "src/components/Notification";
+import { Calendar } from "react-native-calendars";
 
 import {
   ActionButton,
@@ -15,15 +17,20 @@ import {
   SubjectContainer,
   TimeText,
   SubjectInput,
+  ModalContainer,
+  CloseButton,
+
 } from "./styles";
 import theme from "src/global/theme";
 
 export default function AppointmentDetails() {
   const route = useRoute();
-  const { date, time, isNew, isPast, subject = "" } = route.params || {};
+  const { date: initialDate, time, isNew, isPast, subject = "" } = route.params || {};
 
+  const [date, setDate] = useState(initialDate);
   const [editableSubject, setEditableSubject] = useState(subject);
   const [notification, setNotification] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [isCalendarVisible, setIsCalendarVisible] = useState(false);
 
   function handleSchedule() {
     if (!editableSubject.trim()) {
@@ -49,10 +56,21 @@ export default function AppointmentDetails() {
       <Header />
 
       <HeaderCalendar>
-        <DateContainer>
-          <MonthText>Dezembro</MonthText>
-          <DayText>{date.split("/")[0]}</DayText>
-        </DateContainer>
+
+        {isNew || !isPast ? (
+          <TouchableOpacity onPress={() => setIsCalendarVisible(true)}>
+            <DateContainer>
+              <MonthText>Dezembro</MonthText>
+              <DayText>{date.split("/")[0]}</DayText>
+            </DateContainer>
+          </TouchableOpacity>
+        ) : (
+          <DateContainer>
+            <MonthText>Dezembro</MonthText>
+            <DayText>{date.split("/")[0]}</DayText>
+          </DateContainer>
+        )}
+
         <TimeText>{time}</TimeText>
       </HeaderCalendar>
 
@@ -83,10 +101,44 @@ export default function AppointmentDetails() {
         </ActionButton>
       )}
 
-      {/* 🔹 Exibe a notificação se houver alguma */}
       {notification && (
         <Notification message={notification.message} type={notification.type} onClose={() => setNotification(null)} />
       )}
+
+      <Modal
+        visible={isCalendarVisible}
+        animationType="fade"
+        transparent
+        onRequestClose={() => setIsCalendarVisible(false)}
+      >
+        <ModalContainer>
+          <Calendar
+            onDayPress={(day) => {
+              setDate(day.dateString);
+              setIsCalendarVisible(false);
+            }}
+            markedDates={{
+              [date]: { selected: true, selectedColor: theme.colors.primary },
+            }}
+            theme={{
+              selectedDayBackgroundColor: theme.colors.primary,
+              todayTextColor: theme.colors.button.confirm,
+              arrowColor: theme.colors.primary,
+              textMonthFontWeight: "bold",
+            }}
+            style={{
+              borderRadius: 10,
+              marginHorizontal: 20,
+              backgroundColor: theme.colors.background,
+            }}
+          />
+          <CloseButton onPress={() => setIsCalendarVisible(false)}>
+            <ButtonText>Fechar</ButtonText>
+          </CloseButton>
+        </ModalContainer>
+      </Modal>
     </Container>
   );
 }
+
+
