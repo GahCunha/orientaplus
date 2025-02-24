@@ -88,16 +88,19 @@ export const ButtonText = styled.Text<{ color?: string }>`
   color: ${(props) => props.color || theme.colors.text_light};
 `;
 
+
 export const SubjectInput = styled.TextInput`
   font-size: 16px;
   font-weight: bold;
   color: ${theme.colors.text};
-  height: 100px;
+  height: 268px;
   padding: 10px;
   font-family: ${theme.fonts.regular};
   background-color: ${theme.colors.neutral.secondary};
   border-radius: 8px;
+  text-align-vertical: top;
 `;
+
 
 
 export const ModalContainer = styled.View`
