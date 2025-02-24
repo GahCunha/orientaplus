@@ -1,7 +1,7 @@
 import { useRoute } from "@react-navigation/native";
 import Header from "src/components/Header";
 import { useState } from "react";
-import { Modal, TouchableOpacity } from "react-native";
+import { Modal, TouchableOpacity, FlatList } from "react-native";
 import Notification from "src/components/Notification";
 import { Calendar } from "react-native-calendars";
 
@@ -18,19 +18,25 @@ import {
   TimeText,
   SubjectInput,
   ModalContainer,
+  TimePickerBox,
   CloseButton,
-
+  TimeSlotText,
+  TimeSlotButton,
 } from "./styles";
 import theme from "src/global/theme";
 
 export default function AppointmentDetails() {
   const route = useRoute();
-  const { date: initialDate, time, isNew, isPast, subject = "" } = route.params || {};
+  const { date: initialDate, time: initialTime, isNew, isPast, subject = "" } = route.params || {};
 
   const [date, setDate] = useState(initialDate);
+  const [time, setTime] = useState(initialTime);
   const [editableSubject, setEditableSubject] = useState(subject);
   const [notification, setNotification] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [isCalendarVisible, setIsCalendarVisible] = useState(false);
+  const [isTimePickerVisible, setIsTimePickerVisible] = useState(false); // 🔹 Estado do modal de horário
+
+  const availableTimes = ["13:10", "14:00", "15:20", "16:40", "17:10"]; // 🔹 Horários disponíveis
 
   function handleSchedule() {
     if (!editableSubject.trim()) {
@@ -71,7 +77,13 @@ export default function AppointmentDetails() {
           </DateContainer>
         )}
 
-        <TimeText>{time}</TimeText>
+        {isNew || !isPast ? (
+          <TouchableOpacity onPress={() => setIsTimePickerVisible(true)}>
+            <TimeText>{time}</TimeText>
+          </TouchableOpacity>
+        ) : (
+          <TimeText>{time}</TimeText>
+        )}
       </HeaderCalendar>
 
       <SubjectContainer isEditable={isNew || !isPast}>
@@ -105,12 +117,8 @@ export default function AppointmentDetails() {
         <Notification message={notification.message} type={notification.type} onClose={() => setNotification(null)} />
       )}
 
-      <Modal
-        visible={isCalendarVisible}
-        animationType="fade"
-        transparent
-        onRequestClose={() => setIsCalendarVisible(false)}
-      >
+
+      <Modal visible={isCalendarVisible} animationType="fade" transparent onRequestClose={() => setIsCalendarVisible(false)}>
         <ModalContainer>
           <Calendar
             onDayPress={(day) => {
@@ -133,6 +141,26 @@ export default function AppointmentDetails() {
             }}
           />
           <CloseButton onPress={() => setIsCalendarVisible(false)}>
+            <ButtonText>Fechar</ButtonText>
+          </CloseButton>
+        </ModalContainer>
+      </Modal>
+
+      {/* 🔹 Modal de Seleção de Horário */}
+      <Modal visible={isTimePickerVisible} animationType="fade" transparent onRequestClose={() => setIsTimePickerVisible(false)}>
+        <ModalContainer>
+          <TimePickerBox>
+            <FlatList
+              data={availableTimes}
+              keyExtractor={(item) => item}
+              renderItem={({ item }) => (
+                <TimeSlotButton onPress={() => { setTime(item); setIsTimePickerVisible(false); }}>
+                  <TimeSlotText>{item}</TimeSlotText>
+                </TimeSlotButton>
+              )}
+            />
+          </TimePickerBox>
+          <CloseButton onPress={() => setIsTimePickerVisible(false)}>
             <ButtonText>Fechar</ButtonText>
           </CloseButton>
         </ModalContainer>

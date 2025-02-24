@@ -11,7 +11,7 @@ export const Container = styled.View`
 
 export const HeaderCalendar = styled.View`
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: start;
   align-items: center;
   margin-bottom: 20px;
 `;
@@ -37,10 +37,11 @@ export const DayText = styled.Text`
 `;
 
 export const TimeText = styled.Text`
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
   color: ${theme.colors.text};
-  font-family: ${theme.fonts.regular};
+  font-family: ${theme.fonts.bold};
+  margin-left: 30%;
 `;
 
 export const SubjectContainer = styled.View`
@@ -98,6 +99,7 @@ export const SubjectInput = styled.TextInput`
   border-radius: 8px;
 `;
 
+
 export const ModalContainer = styled.View`
   flex: 1;
   justify-content: center;
@@ -110,4 +112,29 @@ export const CloseButton = styled(TouchableOpacity)`
   padding: 12px 20px;
   border-radius: 10px;
   margin-top: 10px;
+`;
+
+// 🔹 Estilizando a seleção de horários
+export const TimePickerBox = styled.View`
+  background-color: ${theme.colors.background};
+  padding: 20px;
+  border-radius: 20px;
+  width: 80%;
+  align-items: center;
+  elevation: 5;
+`;
+
+export const TimeSlotButton = styled.TouchableOpacity`
+  background-color: ${theme.colors.neutral.secondary};
+  padding: 15px;
+  border-radius: 10px;
+  width: 100%;
+  margin-bottom: 10px;
+  align-items: center;
+`;
+
+export const TimeSlotText = styled.Text`
+  font-size: 18px;
+  font-weight: bold;
+  color: ${theme.colors.text};
 `;
