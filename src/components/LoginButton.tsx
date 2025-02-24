@@ -2,39 +2,33 @@ import React from "react";
 import { TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import { AntDesign } from "@expo/vector-icons";
+import theme from "src/global/theme"; // 🔹 Importando o tema
 
 interface LoginButtonProps {
   icon: keyof typeof AntDesign.glyphMap;
   text: string;
-  backgroundColor: string;
-  textColor: string;
-  iconColor: string;
+  type: "google" | "apple"; // Define tipos para escolher cores automaticamente
   onPress: () => void;
 }
 
-const LoginButton: React.FC<LoginButtonProps> = ({
-  icon,
-  text,
-  backgroundColor,
-  textColor,
-  iconColor,
-  onPress,
-}) => {
+const LoginButton: React.FC<LoginButtonProps> = ({ icon, text, type, onPress }) => {
+  const isGoogle = type === "google";
+
   return (
-    <ButtonContainer onPress={onPress} backgroundColor={backgroundColor}>
-      <AntDesign name={icon} size={24} color={iconColor} />
-      <ButtonText color={textColor}>{text}</ButtonText>
+    <ButtonContainer isGoogle={isGoogle} onPress={onPress}>
+      <AntDesign name={icon} size={24} color={isGoogle ? "#EA4335" : theme.colors.text_light} />
+      <ButtonText isGoogle={isGoogle}>{text}</ButtonText>
     </ButtonContainer>
   );
 };
 
 // Styled Components
-const ButtonContainer = styled(TouchableOpacity)<{ backgroundColor: string }>`
+const ButtonContainer = styled(TouchableOpacity)<{ isGoogle: boolean }>`
   flex-direction: row;
   align-items: center;
   width: 90%;
   height: 50px;
-  background-color: ${({ backgroundColor }: { backgroundColor: string }) => backgroundColor};
+  background-color: ${(props) => (props.isGoogle ? theme.colors.background : theme.colors.neutral.primary)};
   border-radius: 25px;
   padding: 10px;
   margin-bottom: 15px;
@@ -42,13 +36,13 @@ const ButtonContainer = styled(TouchableOpacity)<{ backgroundColor: string }>`
   shadow-color: #000;
   shadow-opacity: 0.1;
   shadow-radius: 5px;
-  elevation: 5;
+  shadow-offset: 0px 5px;
 `;
 
-const ButtonText = styled.Text<{ color: string }>`
+const ButtonText = styled.Text<{ isGoogle: boolean }>`
   font-size: 16px;
   font-weight: bold;
-  color: ${({ color }: { color: string }) => color};
+  color: ${(props) => (props.isGoogle ? theme.colors.text : theme.colors.text_light)};
   margin-left: 10px;
 `;
 

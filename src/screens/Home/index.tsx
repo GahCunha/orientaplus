@@ -14,7 +14,7 @@ export default function Home() {
       date: "20/02/2025",
       time: "14:00",
       iconName: 'info',
-      onPress: () => handleOpenAppointment("20/02/2025", "14:00", false)
+      onPress: () => handleOpenAppointment("20/02/2025", "14:00", true)
     },
     {
       title: "Assunto",

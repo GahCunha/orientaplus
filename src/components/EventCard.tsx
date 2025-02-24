@@ -1,36 +1,38 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from "@expo/vector-icons";
+import theme from "src/global/theme";
 
 interface EventCardProps {
-    title: string;
-    date: string;
-    time: string;
-    iconName: keyof typeof MaterialIcons.glyphMap;
-    onPress: () => void;
+  title: string;
+  date: string;
+  time: string;
+  iconName: keyof typeof MaterialIcons.glyphMap;
+  onPress: () => void;
 }
 
 export default function EventCard({ title, date, time, iconName, onPress }: EventCardProps) {
-    return (
-        <CardContainer>
-            <LeftIndicator />
-            <Content>
-                <Title>{title}</Title>
-                <DateText>{date} - {time}</DateText>
-            </Content>
-            {onPress && (
-                <EditButton onPress={onPress}>
-                    <MaterialIcons name={iconName} size={20} color="#7D7D7D" />
-                </EditButton>
-            )}
-        </CardContainer>
-    );
+  return (
+    <CardContainer>
+      <LeftIndicator />
+      <Content>
+        <Title>{title}</Title>
+        <DateText>{date} - {time}</DateText>
+      </Content>
+      {onPress && (
+        <EditButton onPress={onPress}>
+          <MaterialIcons name={iconName} size={20} color={theme.colors.neutral.tertiary} />
+        </EditButton>
+      )}
+    </CardContainer>
+  );
 }
+
 
 const CardContainer = styled.View`
   flex-direction: row;
   align-items: center;
-  background-color: #eaeaea;
+  background-color: ${theme.colors.card_background};
   border-radius: 12px;
   margin-bottom: 10px;
   width: 100%;
@@ -38,10 +40,10 @@ const CardContainer = styled.View`
 `;
 
 const LeftIndicator = styled.View`
-    width: 8px;
-    height: 100%;
-    background-color: #6a1b9a;
-    overflow: hidden;
+  width: 8px;
+  height: 100%;
+  background-color: ${theme.colors.primary}; 
+  overflow: hidden;
 `;
 
 const Content = styled.View`
@@ -52,16 +54,18 @@ const Content = styled.View`
 const Title = styled.Text`
   font-size: 16px;
   font-weight: bold;
-  color: #333;
+  color: ${theme.colors.text};
+  font-family: ${theme.fonts.bold};
 `;
 
 const DateText = styled.Text`
   font-size: 14px;
-  color: #555;
+  color: ${theme.colors.neutral.tertiary};
+  font-family: ${theme.fonts.regular};
 `;
 
 const EditButton = styled(TouchableOpacity)`
-height: 100%;
-  background-color: #f0f0f0;
-    padding: 5%;
+  height: 100%;
+  background-color: ${theme.colors.neutral.quaternary};
+  padding: 5%;
 `;

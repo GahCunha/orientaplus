@@ -11,9 +11,9 @@ export default function ConfigScreen() {
         <Container>
             <Header />
             <Title>Configurações</Title>
-            <Button onPress={handleLogout} backgroundColor={theme.colors.primary_light}>
+            <Button onPress={handleLogout} backgroundColor={theme.colors.button.danger}>
                 <ButtonText>Sair</ButtonText>
             </Button>
         </Container>
     );
-}
+} 

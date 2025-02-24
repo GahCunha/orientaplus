@@ -35,5 +35,5 @@ export const Button = styled(TouchableOpacity) <{ backgroundColor: string }>`
 export const ButtonText = styled.Text`
   font-size: 16px;
   font-family: ${theme.fonts.bold};
-  color: ${theme.colors.text};
+  color: ${theme.colors.text_light };
   `;

@@ -1,12 +1,12 @@
-import styled from 'styled-components/native';
-import theme from '../../global/theme';
+import styled from "styled-components/native";
+import theme from "../../global/theme";
 import { getStatusBarHeight } from "react-native-iphone-x-helper";
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from "react-native";
 
 export const Container = styled.View`
-    flex: 1;
-    padding: ${getStatusBarHeight() + 20}px 20px 0 20px;
-    background-color: ${theme.colors.background};
+  flex: 1;
+  padding: ${getStatusBarHeight() + 20}px 20px 0 20px;
+  background-color: ${theme.colors.background};
 `;
 
 export const HeaderCalendar = styled.View`
@@ -17,7 +17,7 @@ export const HeaderCalendar = styled.View`
 `;
 
 export const DateContainer = styled.View`
-  background-color: #e6e6e6;
+  background-color: ${theme.colors.primary_light};
   padding: 10px;
   border-radius: 10px;
   align-items: center;
@@ -25,23 +25,26 @@ export const DateContainer = styled.View`
 
 export const MonthText = styled.Text`
   font-size: 16px;
-  color: #555;
+  color: ${theme.colors.neutral.tertiary};
+  font-family: ${theme.fonts.regular};
 `;
 
 export const DayText = styled.Text`
   font-size: 32px;
   font-weight: bold;
-  color: #333;
+  color: ${theme.colors.text};
+  font-family: ${theme.fonts.bold};
 `;
 
 export const TimeText = styled.Text`
   font-size: 18px;
   font-weight: bold;
-  color: #333;
+  color: ${theme.colors.text};
+  font-family: ${theme.fonts.regular};
 `;
 
 export const SubjectContainer = styled.View`
-  background-color: #e6e6e6;
+  background-color: ${theme.colors.card_background};
   padding: 15px;
   border-radius: 10px;
   margin-bottom: 20px;
@@ -50,12 +53,15 @@ export const SubjectContainer = styled.View`
 export const SubjectTitle = styled.Text`
   font-size: 16px;
   font-weight: bold;
+  color: ${theme.colors.text};
+  font-family: ${theme.fonts.bold};
 `;
 
 export const SubjectDescription = styled.Text`
   font-size: 14px;
-  color: #555;
+  color: ${theme.colors.neutral.tertiary};
   margin-top: 5px;
+  font-family: ${theme.fonts.regular};
 `;
 
 export const ButtonsContainer = styled.View`
@@ -77,14 +83,17 @@ export const ActionButton = styled(TouchableOpacity)<{ backgroundColor: string }
 
 export const ButtonText = styled.Text<{ color?: string }>`
   font-size: 16px;
-  font-weight: bold;
-  color: ${(props) => props.color || theme.colors.neutral.secondary};
+  font-family: ${theme.fonts.bold};
+  color: ${(props) => props.color || theme.colors.text_light};
 `;
 
 export const SubjectInput = styled.TextInput`
   font-size: 16px;
   font-weight: bold;
-  color: #333;
+  color: ${theme.colors.text};
   height: 100px;
   padding: 10px;
+  font-family: ${theme.fonts.regular};
+  background-color: ${theme.colors.neutral.secondary};
+  border-radius: 8px;
 `;

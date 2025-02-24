@@ -1,4 +1,5 @@
 import styled from "styled-components/native";
+import theme from "src/global/theme";
 
 export default function Header() {
   return (
@@ -25,6 +26,7 @@ const Logo = styled.Image`
 const Avatar = styled.View`
     width: 60px;
     height: 60px;
-    background-color: #f0f0f0;
+    background-color: ${theme.colors.neutral.secondary};
     border-radius: 40px;
+    //border: 1px solid ${theme.colors.primary};
 `;

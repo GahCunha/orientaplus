@@ -15,6 +15,7 @@ import {
   TimeText,
   SubjectInput
 } from "./styles";
+import theme from "src/global/theme";
 
 export default function AppointmentDetails() {
   const route = useRoute();
@@ -43,24 +44,24 @@ export default function AppointmentDetails() {
           onChangeText={setEditableSubject}
           editable={isNew || !isPast} 
           placeholder="Digite o assunto..."
-          placeholderTextColor="#999"
+          placeholderTextColor={theme.colors.neutral.tertiary}
         />
       </SubjectContainer>
 
 
       {!isPast && !isNew && (
         <ButtonsContainer>
-          <ActionButton backgroundColor="#DDE5B6" onPress={() => console.log("Atualizar horário")}>
+          <ActionButton backgroundColor={theme.colors.button.secondary} onPress={() => console.log("Atualizar horário")}>
             <ButtonText>Atualizar Horário</ButtonText>
           </ActionButton>
-          <ActionButton backgroundColor="#333" onPress={() => console.log("Apagar horário")}>
-            <ButtonText color="#FFF">Apagar Horário</ButtonText>
+          <ActionButton backgroundColor={theme.colors.button.danger} onPress={() => console.log("Apagar horário")}>
+            <ButtonText color={theme.colors.text_light}>Apagar Horário</ButtonText>
           </ActionButton>
         </ButtonsContainer>
       )}
 
       {isNew && (
-        <ActionButton backgroundColor="#B7F4C1" onPress={() => console.log("Agendar horário")}>
+        <ActionButton backgroundColor={theme.colors.button.confirm} onPress={() => console.log("Agendar horário")}>
           <ButtonText>Agendar horário</ButtonText>
         </ActionButton>
       )}

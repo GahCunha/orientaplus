@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { Container } from "./styles";
+import { Container, calendarTheme } from "./styles"; // 🔹 Importamos o tema aqui
 import Header from "src/components/Header";
 import { Calendar } from "react-native-calendars";
 import TimeSlot from "src/components/TimeSlot";
@@ -32,8 +32,9 @@ export default function AppointmentScreen() {
       <Calendar
         onDayPress={(day) => setSelectedDate(day.dateString)}
         markedDates={{
-          [selectedDate]: { selected: true, disableTouchEvent: true, selectedDotColor: "orange" },
+          [selectedDate]: { selected: true, disableTouchEvent: true, selectedColor: calendarTheme.selectedDayBackgroundColor },
         }}
+        theme={calendarTheme} 
       />
 
       {availableTimes.map((time) => (
