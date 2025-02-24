@@ -107,7 +107,7 @@ export default function App() {
                   options={{
                     tabBarIcon: ({ focused }) => (
                       <Image
-                        source={focused ? require('./assets/user2.png') : require('./assets/user.png')}
+                        source={focused ? require('./assets/config2.png') : require('./assets/config.png')}
                         style={{ width: 30, height: 30 }}
                         resizeMode="contain"
                       />
