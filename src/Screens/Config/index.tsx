@@ -1,11 +1,19 @@
-import { View, Text } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import Header from "src/components/Header";
+import { Container, Title, Button, ButtonText } from "./styles";
+import theme from "src/global/theme";
 
 export default function ConfigScreen() {
-    return(
-        <View style={{flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "green"}}>
-            <StatusBar style="auto" />
-            <Text>Teste2</Text>
-        </View>
+    function handleLogout() {
+        console.log("Logout");
+    }
+    
+    return (
+        <Container>
+            <Header />
+            <Title>Configurações</Title>
+            <Button onPress={handleLogout} backgroundColor={theme.colors.primary_light}>
+                <ButtonText>Sair</ButtonText>
+            </Button>
+        </Container>
     );
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, Text } from "react-native";
+import { TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -45,7 +45,7 @@ const ButtonContainer = styled(TouchableOpacity)<{ backgroundColor: string }>`
   elevation: 5;
 `;
 
-const ButtonText = styled(Text)<{ color: string }>`
+const ButtonText = styled.Text<{ color: string }>`
   font-size: 16px;
   font-weight: bold;
   color: ${({ color }: { color: string }) => color};

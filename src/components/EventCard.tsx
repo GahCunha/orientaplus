@@ -27,7 +27,7 @@ export default function EventCard({ title, date, time, iconName, onPress }: Even
     );
 }
 
-const CardContainer = styled(View)`
+const CardContainer = styled.View`
   flex-direction: row;
   align-items: center;
   background-color: #eaeaea;
@@ -37,25 +37,25 @@ const CardContainer = styled(View)`
   overflow: hidden;
 `;
 
-const LeftIndicator = styled(View)`
+const LeftIndicator = styled.View`
     width: 8px;
     height: 100%;
     background-color: #6a1b9a;
     overflow: hidden;
 `;
 
-const Content = styled(View)`
+const Content = styled.View`
   flex: 1;
   padding: 0px 10px;
 `;
 
-const Title = styled(Text)`
+const Title = styled.Text`
   font-size: 16px;
   font-weight: bold;
   color: #333;
 `;
 
-const DateText = styled(Text)`
+const DateText = styled.Text`
   font-size: 14px;
   color: #555;
 `;
