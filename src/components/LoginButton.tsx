@@ -28,7 +28,7 @@ const ButtonContainer = styled(TouchableOpacity)<{ isGoogle: boolean }>`
   align-items: center;
   width: 90%;
   height: 50px;
-  background-color: ${(props) => (props.isGoogle ? theme.colors.neutral.secondary : theme.colors.neutral.primary)};
+  background-color: ${(props: { isGoogle: any; }) => (props.isGoogle ? theme.colors.neutral.secondary : theme.colors.neutral.primary)};
   border-radius: 25px;
   padding: 10px;
   margin-bottom: 15px;
@@ -42,7 +42,7 @@ const ButtonContainer = styled(TouchableOpacity)<{ isGoogle: boolean }>`
 const ButtonText = styled.Text<{ isGoogle: boolean }>`
   font-size: 16px;
   font-weight: bold;
-  color: ${(props) => (props.isGoogle ? theme.colors.text : theme.colors.text_light)};
+  color: ${(props: { isGoogle: any; }) => (props.isGoogle ? theme.colors.text : theme.colors.text_light)};
   margin-left: 10px;
 `;
 

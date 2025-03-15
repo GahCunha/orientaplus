@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Container, calendarTheme } from "./styles";
 import Header from "src/components/Header";
@@ -7,9 +7,10 @@ import TimeSlot from "src/components/TimeSlot";
 import { useNavigation } from "@react-navigation/native";
 import { Button, ScrollView, ActivityIndicator, Text } from "react-native";
 import { getAvailableTimes } from "src/services/calendlyService";
+import { NavigationProps } from "src/types";
 
 export default function AppointmentScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProps>();
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [availableTimes, setAvailableTimes] = useState<any[]>([]);
@@ -78,7 +79,7 @@ export default function AppointmentScreen() {
     <Container>
       <Header />
       <Calendar
-        onDayPress={(day) => setSelectedDate(day.dateString)}
+        onDayPress={(day: { dateString: SetStateAction<string>; }) => setSelectedDate(day.dateString)}
         markedDates={{
           ...markedDates,
           ...disabledDates,

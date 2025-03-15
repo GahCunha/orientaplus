@@ -17,7 +17,7 @@ export const getUserId = async (): Promise<string | null> => {
 
     return response.data.resource.uri; // Retorna o ID do usuário
   } catch (error) {
-    console.error("❌ Erro ao buscar User ID:", error.response?.data || error);
+    console.error("❌ Erro ao buscar User ID:", (error as any).response?.data || error);
     return null;
   }
 };
@@ -40,7 +40,7 @@ export const getEventTypes = async (): Promise<any[]> => {
 
     return response.data.collection; // Retorna a lista de eventos
   } catch (error) {
-    console.error("❌ Erro ao buscar tipos de eventos:", error.response?.data || error);
+    console.error("❌ Erro ao buscar tipos de eventos:", (error as any).response?.data || error);
     return [];
   }
 };
@@ -97,7 +97,7 @@ export const getAvailableTimes = async (eventSlug: string, daysAhead: number = 3
     }
 
     return allAvailableTimes; // 🔹 Retorna todos os horários disponíveis
-  } catch (error) {
+  } catch (error: any) {
     console.error("❌ Erro ao buscar horários disponíveis:", error.response?.data || error);
     return [];
   }
