@@ -28,13 +28,13 @@ const ButtonContainer = styled(TouchableOpacity)<{ isGoogle: boolean }>`
   align-items: center;
   width: 90%;
   height: 50px;
-  background-color: ${(props) => (props.isGoogle ? theme.colors.background : theme.colors.neutral.primary)};
+  background-color: ${(props) => (props.isGoogle ? theme.colors.neutral.secondary : theme.colors.neutral.primary)};
   border-radius: 25px;
   padding: 10px;
   margin-bottom: 15px;
   justify-content: center;
   shadow-color: #000;
-  shadow-opacity: 0.1;
+  shadow-opacity: 0.2;
   shadow-radius: 5px;
   shadow-offset: 0px 5px;
 `;
