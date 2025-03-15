@@ -5,14 +5,14 @@ import Header from "src/components/Header";
 import { Calendar } from "react-native-calendars";
 import TimeSlot from "src/components/TimeSlot";
 import { useNavigation } from "@react-navigation/native";
-import { Button } from "react-native";
+import { Button, ScrollView } from "react-native";
 
 export default function AppointmentScreen() {
   const navigation = useNavigation();
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
 
-  const availableTimes = ["13:10", "14:00", "15:20"];
+  const availableTimes = ["13:10", "14:00", "15:20", "16:40"];
 
   function handleConfirm() {
     if (!selectedDate || !selectedTime) return;
@@ -28,18 +28,20 @@ export default function AppointmentScreen() {
   return (
     <Container>
       <Header />
-
       <Calendar
         onDayPress={(day) => setSelectedDate(day.dateString)}
         markedDates={{
           [selectedDate]: { selected: true, disableTouchEvent: true, selectedColor: calendarTheme.selectedDayBackgroundColor },
         }}
-        theme={calendarTheme} 
+        theme={calendarTheme}
       />
 
-      {availableTimes.map((time) => (
-        <TimeSlot key={time} time={time} isSelected={selectedTime === time} onPress={() => setSelectedTime(time)} />
-      ))}
+      <ScrollView>
+        {availableTimes.map((time) => (
+          <TimeSlot key={time} time={time} isSelected={selectedTime === time} onPress={() => setSelectedTime(time)} />
+        ))}
+      </ScrollView>
+
 
       {/* Botão para confirmar e navegar para AppointmentDetails */}
       <Button title="Confirmar Agendamento" onPress={handleConfirm} disabled={!selectedDate || !selectedTime} />
