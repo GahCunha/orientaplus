@@ -1,4 +1,4 @@
-import { useState, useEffect, SetStateAction } from "react";
+import { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Container, calendarTheme } from "./styles";
 import Header from "src/components/Header";
@@ -18,40 +18,46 @@ export default function AppointmentScreen() {
   const [markedDates, setMarkedDates] = useState<{ [key: string]: any }>({});
   const [disabledDates, setDisabledDates] = useState<{ [key: string]: any }>({});
 
-  const EVENT_SLUG = "evento";
-
   useEffect(() => {
     async function fetchAvailableTimes() {
       setLoading(true);
-      const times = await getAvailableTimes(EVENT_SLUG);
+      const times = await getAvailableTimes();
 
       const datesWithTimes: { [key: string]: boolean } = {};
       const formattedTimes = times.map((slot: any) => {
-        const date = slot.start_time.split("T")[0];
-        const time = slot.start_time.split("T")[1].slice(0, 5);
-        datesWithTimes[date] = true;
-        return { date, time };
+        const dt = new Date(slot.start_time);
+        // Formata a data no padrão YYYY-MM-DD utilizando o horário local
+        const year = dt.getFullYear();
+        const month = String(dt.getMonth() + 1).padStart(2, "0");
+        const day = String(dt.getDate()).padStart(2, "0");
+        const localDate = `${year}-${month}-${day}`;
+        // Converte o horário para exibição local (ex.: "09:00")
+        const localTime = dt.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        });
+        datesWithTimes[localDate] = true;
+        return { date: localDate, time: localTime };
       });
 
       setAvailableTimes(formattedTimes);
 
-      // 🔥 Criar um objeto para destacar os dias com horários disponíveis
       const newMarkedDates: { [key: string]: any } = {};
       const newDisabledDates: { [key: string]: any } = {};
 
-      // Definir os estilos no calendário
-      const today = new Date().toISOString().split("T")[0];
-
-      for (let i = 0; i < 30; i++) { // Verificamos os próximos 30 dias
-        const currentDate = new Date();
-        currentDate.setDate(currentDate.getDate() + i);
-        const formattedDate = currentDate.toISOString().split("T")[0];
+      const today = new Date();
+      for (let i = 0; i < 30; i++) {
+        const currentDate = new Date(today);
+        currentDate.setDate(today.getDate() + i);
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+        const day = String(currentDate.getDate()).padStart(2, "0");
+        const formattedDate = `${year}-${month}-${day}`;
 
         if (datesWithTimes[formattedDate]) {
-          // Se há horários disponíveis, destacamos
           newMarkedDates[formattedDate] = { selectedColor: "#7E8BF5", selectedTextColor: "#fff" };
         } else {
-          // Se não há horários, deixamos o dia desabilitado e opaco
           newDisabledDates[formattedDate] = { disabled: true, disableTouchEvent: false, textColor: "#B0B0B0" };
         }
       }
@@ -64,9 +70,12 @@ export default function AppointmentScreen() {
     fetchAvailableTimes();
   }, []);
 
+  function handleDayPress(day: { dateString: string }) {
+    setSelectedDate(day.dateString);
+  }
+
   function handleConfirm() {
     if (!selectedDate || !selectedTime) return;
-
     navigation.navigate("AppointmentDetails", {
       date: selectedDate,
       time: selectedTime,
@@ -79,7 +88,7 @@ export default function AppointmentScreen() {
     <Container>
       <Header />
       <Calendar
-        onDayPress={(day: { dateString: SetStateAction<string>; }) => setSelectedDate(day.dateString)}
+        onDayPress={handleDayPress}
         markedDates={{
           ...markedDates,
           ...disabledDates,
@@ -87,7 +96,7 @@ export default function AppointmentScreen() {
         }}
         theme={{
           ...calendarTheme,
-          textDisabledColor: "#B0B0B0", // Define a cor dos dias desabilitados
+          textDisabledColor: "#B0B0B0",
         }}
       />
 
@@ -106,7 +115,6 @@ export default function AppointmentScreen() {
               />
             ))
           }
-
           {availableTimes.filter((slot) => slot.date === selectedDate).length === 0 && selectedDate && (
             <Text style={{ textAlign: "center", marginTop: 20, color: "#B0B0B0" }}>
               Nenhum horário disponível para essa data.
