@@ -9,6 +9,14 @@ import { Button, ScrollView, ActivityIndicator, Text } from "react-native";
 import { getAvailableTimes } from "src/services/calendlyService";
 import { NavigationProps } from "src/types";
 
+// Função para formatar a data em UTC no padrão YYYY-MM-DD
+function formatUtcDate(date: Date): string {
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 export default function AppointmentScreen() {
   const navigation = useNavigation<NavigationProps>();
   const [selectedDate, setSelectedDate] = useState("");
@@ -24,21 +32,18 @@ export default function AppointmentScreen() {
       const times = await getAvailableTimes();
 
       const datesWithTimes: { [key: string]: boolean } = {};
+      // Usando a data UTC para agrupar os slots conforme retornado pela API
       const formattedTimes = times.map((slot: any) => {
         const dt = new Date(slot.start_time);
-        // Formata a data no padrão YYYY-MM-DD utilizando o horário local
-        const year = dt.getFullYear();
-        const month = String(dt.getMonth() + 1).padStart(2, "0");
-        const day = String(dt.getDate()).padStart(2, "0");
-        const localDate = `${year}-${month}-${day}`;
-        // Converte o horário para exibição local (ex.: "09:00")
+        const utcDate = formatUtcDate(dt);
+        // Para o horário, você pode optar por exibir em local ou em UTC; aqui usamos toLocaleTimeString
         const localTime = dt.toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
           hour12: false,
         });
-        datesWithTimes[localDate] = true;
-        return { date: localDate, time: localTime };
+        datesWithTimes[utcDate] = true;
+        return { date: utcDate, time: localTime };
       });
 
       setAvailableTimes(formattedTimes);
@@ -46,14 +51,17 @@ export default function AppointmentScreen() {
       const newMarkedDates: { [key: string]: any } = {};
       const newDisabledDates: { [key: string]: any } = {};
 
+      // Vamos construir o calendário para 30 dias usando também a data UTC
       const today = new Date();
+      const utcToday = formatUtcDate(today);
+      // Converter utcToday para um objeto Date em UTC pode ser feito manualmente:
+      const [year, month, day] = utcToday.split("-").map(Number);
+      const baseDate = new Date(Date.UTC(year, month - 1, day));
+
       for (let i = 0; i < 30; i++) {
-        const currentDate = new Date(today);
-        currentDate.setDate(today.getDate() + i);
-        const year = currentDate.getFullYear();
-        const month = String(currentDate.getMonth() + 1).padStart(2, "0");
-        const day = String(currentDate.getDate()).padStart(2, "0");
-        const formattedDate = `${year}-${month}-${day}`;
+        const currentDate = new Date(baseDate);
+        currentDate.setUTCDate(baseDate.getUTCDate() + i);
+        const formattedDate = formatUtcDate(currentDate);
 
         if (datesWithTimes[formattedDate]) {
           newMarkedDates[formattedDate] = { selectedColor: "#7E8BF5", selectedTextColor: "#fff" };
@@ -71,6 +79,9 @@ export default function AppointmentScreen() {
   }, []);
 
   function handleDayPress(day: { dateString: string }) {
+    // Agora, day.dateString vem do componente Calendar. Se ele estiver sendo gerado pelo calendário no formato local,
+    // pode ser necessário converter para UTC ou ajustar o calendário para usar o mesmo padrão.
+    // Uma alternativa é configurar o componente Calendar para usar o formato desejado.
     setSelectedDate(day.dateString);
   }
 

@@ -58,6 +58,60 @@ export const getUserScheduledEvents = async (
   return data;
 };
 
+/**
+ * Lista os eventos agendados.
+ *
+ * Parâmetros opcionais:
+ * - count: número de registros (padrão: 20)
+ * - group: URI do grupo para filtrar eventos
+ * - invitee_email: filtra eventos com o email do convidado
+ * - page_token: token para paginação
+ * - sort: ordenação, ex: "start_time:asc"
+ * - status: "active" ou "canceled"
+ * - user: URI do usuário para filtrar eventos
+ * - max_start_time: data máxima de início (UTC) no formato ISO
+ * - min_start_time: data mínima de início (UTC) no formato ISO
+ * - organization: URI da organização para filtrar eventos
+ */
+export const listEvents = async (options?: {
+  count?: number;
+  group?: string;
+  invitee_email?: string;
+  page_token?: string;
+  sort?: string;
+  status?: string;
+  user?: string;
+  max_start_time?: string;
+  min_start_time?: string;
+  organization?: string;
+}): Promise<any> => {
+  let queryParams = `count=${options?.count || 20}`;
+  if (options?.group) queryParams += `&group=${encodeURIComponent(options.group)}`;
+  if (options?.invitee_email) queryParams += `&invitee_email=${encodeURIComponent(options.invitee_email)}`;
+  if (options?.page_token) queryParams += `&page_token=${encodeURIComponent(options.page_token)}`;
+  if (options?.sort) queryParams += `&sort=${encodeURIComponent(options.sort)}`;
+  if (options?.status) queryParams += `&status=${encodeURIComponent(options.status)}`;
+  if (options?.user) queryParams += `&user=${encodeURIComponent(options.user)}`;
+  if (options?.max_start_time) queryParams += `&max_start_time=${encodeURIComponent(options.max_start_time)}`;
+  if (options?.min_start_time) queryParams += `&min_start_time=${encodeURIComponent(options.min_start_time)}`;
+  if (options?.organization) queryParams += `&organization=${encodeURIComponent(options.organization)}`;
+
+  const url = `${API_BASE_URL}/scheduled_events?${queryParams}`;
+
+  try {
+    const { data } = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return data;
+  } catch (error: any) {
+    console.error("Erro ao listar eventos:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
 /** 
  * 🔍 Busca todos os tipos de evento do usuário e armazena em cache 
  */
@@ -214,3 +268,21 @@ export async function createSchedulingLink() {
     return null;
   }
 }
+
+
+export const cancelEvent = async (eventId: string, reason: string): Promise<any> => {
+  // Extrai o UUID do eventId
+  const uuid = eventId.split("/").pop();
+  console.log("Tentando cancelar o evento com UUID:", uuid);
+  const url = `${API_BASE_URL}/scheduled_events/${uuid}/cancellation`;
+  console.log("URL de cancelamento:", url);
+  
+  const { data } = await axios.post(url, { reason }, {
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+      "Content-Type": "application/json",
+    },
+  });
+  return data;
+};
+

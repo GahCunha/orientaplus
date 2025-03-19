@@ -1,10 +1,8 @@
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import { TouchableOpacity, Text, Alert, Linking } from "react-native";
-import Notification from "src/components/Notification";
-import { createSchedulingLink } from "src/services/calendlyService";
+import { TouchableOpacity, Alert, Button, Linking } from "react-native";
 import Header from "src/components/Header";
-
+import { cancelEvent, createSchedulingLink } from "src/services/calendlyService";
 import {
   ActionButton,
   ButtonText,
@@ -18,59 +16,73 @@ import {
   SubjectInput,
 } from "./styles";
 import theme from "src/global/theme";
+import { StatusBar } from "expo-status-bar";
+
+// Função para converter uma string "YYYY-MM-DD" em um objeto Date local
+function parseLocalDate(dateString: string): Date {
+  const [year, month, day] = dateString.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
+
+function formatDateForDisplay(dateString: string): string {
+  const d = parseLocalDate(dateString);
+  return d.toLocaleString("pt-BR", { month: "long" });
+}
+
+function formatDayForDisplay(dateString: string): number {
+  const d = parseLocalDate(dateString);
+  return d.getDate();
+}
 
 export default function AppointmentDetails() {
   const route = useRoute();
   const navigation = useNavigation();
 
-  const { date: initialDate, time: initialTime, isNew, isPast, subject = "" } = route.params || {};
+  // Recebe os parâmetros, incluindo eventId
+  const { date: initialDate, time: initialTime, isNew, isPast, subject = "", eventId } = route.params || {};
 
-  function formatDateForDisplay(dateString: string): string {
-    return new Date(dateString + "T00:00:00").toLocaleString("pt-BR", { month: "long" });
+  // Cria um estado local para o assunto, permitindo edição
+  const [editableSubject, setEditableSubject] = useState(subject);
+
+  // Função para cancelar o evento
+  async function handleCancelEvent() {
+    Alert.alert(
+      "Cancelar Evento",
+      "Tem certeza que deseja cancelar o evento?",
+      [
+        { text: "Não", style: "cancel" },
+        {
+          text: "Sim",
+          onPress: async () => {
+            try {
+              // Extrai o UUID do eventId (ex: "https://api.calendly.com/scheduled_events/GBGBDCAADAEDCRZ2")
+              const uuid = eventId.split("/").pop();
+              await cancelEvent(uuid, "Cancelado pelo usuário");
+              Alert.alert("Evento cancelado com sucesso!");
+              navigation.goBack();
+            } catch (error: any) {
+              Alert.alert("Erro ao cancelar o evento", error.message || "Tente novamente.");
+            }
+          },
+        },
+      ]
+    );
   }
 
-  function formatDayForDisplay(dateString: string): number {
-    return new Date(dateString + "T00:00:00").getDate();
-  }
-
-  const [date, setDate] = useState<string>(initialDate);
-  const [time, setTime] = useState<string>(initialTime);
-  const [editableSubject, setEditableSubject] = useState<string>(subject);
-  const [notification, setNotification] = useState<{ message: string; type: "success" | "error" } | null>(null);
-  const [schedulingLink, setSchedulingLink] = useState<string | null>(null);
-
-  /** 🔥 Criar um link de agendamento no Calendly */
-  async function handleSchedule() {
-    if (!editableSubject.trim()) {
-      setNotification({ message: "Digite um assunto antes de agendar!", type: "error" });
-      return;
-    }
-
-    console.log("📅 Data enviada:", date);
-    console.log("⏰ Horário enviado:", time);
-    console.log("📨 Criando link de agendamento...");
-
+  // Função para gerar o link de agendamento
+  async function handleGenerateLink() {
     try {
-      const response = await createSchedulingLink(); // 🔥 Agora sem passar o slug manualmente
-
-      if (response) {
-        setSchedulingLink(response);
-        setNotification({ message: "Link de agendamento gerado com sucesso!", type: "success" });
-
-        Alert.alert(
-          "Agendamento Criado",
-          "Clique abaixo para confirmar seu agendamento.",
-          [
-            { text: "Acessar link", onPress: () => Linking.openURL(response) },
-            { text: "Fechar", style: "cancel" }
-          ]
-        );
+      const link = await createSchedulingLink();
+      if (link) {
+        Alert.alert("Link Gerado", "Link de agendamento gerado com sucesso!", [
+          { text: "Acessar", onPress: () => Linking.openURL(link) },
+          { text: "Fechar", style: "cancel" },
+        ]);
       } else {
-        throw new Error("Erro ao criar o link de agendamento.");
+        Alert.alert("Erro", "Não foi possível gerar o link de agendamento.");
       }
-    } catch (error) {
-      console.error("❌ Erro ao gerar link de agendamento:", error);
-      setNotification({ message: "Erro ao gerar link de agendamento. Verifique os dados.", type: "error" });
+    } catch (error: any) {
+      Alert.alert("Erro", error.message || "Erro desconhecido ao gerar o link.");
     }
   }
 
@@ -81,13 +93,13 @@ export default function AppointmentDetails() {
       <HeaderCalendar>
         <TouchableOpacity onPress={navigation.goBack}>
           <DateContainer>
-            <MonthText>{formatDateForDisplay(date)}</MonthText>
-            <DayText>{formatDayForDisplay(date)}</DayText>
+            <MonthText>{formatDateForDisplay(initialDate)}</MonthText>
+            <DayText>{formatDayForDisplay(initialDate)}</DayText>
           </DateContainer>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={navigation.goBack}>
-          <TimeText>{time || "Selecionar horário"}</TimeText>
+          <TimeText>{initialTime || "Selecionar horário"}</TimeText>
         </TouchableOpacity>
       </HeaderCalendar>
 
@@ -101,21 +113,19 @@ export default function AppointmentDetails() {
         />
       </SubjectContainer>
 
+      {/* Se for um evento já agendado (não novo) e ainda não cancelado, exibe o botão de cancelar */}
+      {!isNew && !isPast && (
+        <Button title="Cancelar Evento" onPress={handleCancelEvent} color={theme.colors.button.danger} />
+      )}
+
+      {/* Se for um evento novo, exibe o botão para gerar link de agendamento */}
       {isNew && (
-        <ActionButton backgroundColor={theme.colors.button.confirm} onPress={handleSchedule}>
+        <ActionButton backgroundColor={theme.colors.button.confirm} onPress={handleGenerateLink}>
           <ButtonText>Gerar Link de Agendamento</ButtonText>
         </ActionButton>
       )}
 
-      {schedulingLink && (
-        <TouchableOpacity onPress={() => Linking.openURL(schedulingLink)}>
-          <Text style={{ color: theme.colors.primary, marginTop: 10 }}>🔗 Acessar link de agendamento</Text>
-        </TouchableOpacity>
-      )}
-
-      {notification && (
-        <Notification message={notification.message} type={notification.type} onClose={() => setNotification(null)} />
-      )}
+      <StatusBar style="auto" />
     </Container>
   );
 }
