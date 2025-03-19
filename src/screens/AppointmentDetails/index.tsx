@@ -1,6 +1,6 @@
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import { TouchableOpacity, Alert, Button, Linking } from "react-native";
+import { Alert, Button, Linking, TouchableOpacity } from "react-native";
 import Header from "src/components/Header";
 import { cancelEvent, createSchedulingLink } from "src/services/calendlyService";
 import {
@@ -40,8 +40,8 @@ export default function AppointmentDetails() {
 
   // Recebe os parâmetros, incluindo eventId
   const { date: initialDate, time: initialTime, isNew, isPast, subject = "", eventId } = route.params || {};
-
-  // Cria um estado local para o assunto, permitindo edição
+  
+  // Estado local para o assunto, permitindo edição
   const [editableSubject, setEditableSubject] = useState(subject);
 
   // Função para cancelar o evento
@@ -52,10 +52,10 @@ export default function AppointmentDetails() {
       [
         { text: "Não", style: "cancel" },
         {
-          text: "Sim",
+          text: "Sim", 
           onPress: async () => {
             try {
-              // Extrai o UUID do eventId (ex: "https://api.calendly.com/scheduled_events/GBGBDCAADAEDCRZ2")
+              // Extrai o UUID do eventId
               const uuid = eventId.split("/").pop();
               await cancelEvent(uuid, "Cancelado pelo usuário");
               Alert.alert("Evento cancelado com sucesso!");
@@ -91,16 +91,27 @@ export default function AppointmentDetails() {
       <Header />
 
       <HeaderCalendar>
-        <TouchableOpacity onPress={navigation.goBack}>
-          <DateContainer>
-            <MonthText>{formatDateForDisplay(initialDate)}</MonthText>
-            <DayText>{formatDayForDisplay(initialDate)}</DayText>
-          </DateContainer>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={navigation.goBack}>
-          <TimeText>{initialTime || "Selecionar horário"}</TimeText>
-        </TouchableOpacity>
+        {isNew ? (
+          <>
+            <TouchableOpacity onPress={() => navigation.navigate("Appointment")}>
+              <DateContainer>
+                <MonthText>{formatDateForDisplay(initialDate)}</MonthText>
+                <DayText>{formatDayForDisplay(initialDate)}</DayText>
+              </DateContainer>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Appointment")}>
+              <TimeText>{initialTime || "Selecionar horário"}</TimeText>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <>
+            <DateContainer>
+              <MonthText>{formatDateForDisplay(initialDate)}</MonthText>
+              <DayText>{formatDayForDisplay(initialDate)}</DayText>
+            </DateContainer>
+            <TimeText>{initialTime || "Selecionar horário"}</TimeText>
+          </>
+        )}
       </HeaderCalendar>
 
       <SubjectContainer isEditable={isNew || !isPast}>
@@ -113,7 +124,7 @@ export default function AppointmentDetails() {
         />
       </SubjectContainer>
 
-      {/* Se for um evento já agendado (não novo) e ainda não cancelado, exibe o botão de cancelar */}
+      {/* Exibe o botão de cancelar se for um evento já agendado (não novo) e não estiver no passado */}
       {!isNew && !isPast && (
         <Button title="Cancelar Evento" onPress={handleCancelEvent} color={theme.colors.button.danger} />
       )}

@@ -189,14 +189,24 @@ export const getAvailableTimes = async (daysAhead: number = 30): Promise<any[]> 
 
     let allAvailableTimes: any[] = [];
     const now = new Date();
-    now.setMinutes(now.getMinutes() + 5); // Garante que começa no futuro
+    now.setMinutes(now.getMinutes() + 5); // Margem de 5 minutos para garantir que seja no futuro
 
     for (let i = 0; i < daysAhead; i += 7) {
-      const startDate = new Date(now);
-      startDate.setDate(now.getDate() + i);
+      let startDate: Date;
+      if (i === 0) {
+        // Para o primeiro bloco, usamos o horário atual (já com margem)
+        startDate = new Date(now);
+      } else {
+        // Para os blocos seguintes, definimos o início do dia (00:00:00) do dia desejado
+        startDate = new Date(now);
+        startDate.setHours(0, 0, 0, 0);
+        startDate.setDate(startDate.getDate() + i);
+      }
 
-      const endDate = new Date(startDate);
-      endDate.setDate(startDate.getDate() + 6); // Intervalo máximo de 7 dias
+      let endDate = new Date(startDate);
+      endDate.setDate(endDate.getDate() + 6);
+      // Define o final do dia para 23:59:59.999
+      endDate.setHours(23, 59, 59, 999);
 
       const response = await axios.get(`${API_BASE_URL}/event_type_available_times`, {
         headers: {
@@ -221,6 +231,8 @@ export const getAvailableTimes = async (daysAhead: number = 30): Promise<any[]> 
     return [];
   }
 };
+
+
 
 /** 
  * 🔥 Cria um link de agendamento de uso único automaticamente
