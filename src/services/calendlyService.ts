@@ -179,7 +179,7 @@ export const getEventTypeId = async (eventSlug: string): Promise<string | null> 
 /** 
  * ⏳ Busca os horários disponíveis do primeiro evento encontrado
  */
-export const getAvailableTimes = async (daysAhead: number = 30): Promise<any[]> => {
+export const getAvailableTimes = async (daysAhead: number = 120): Promise<any[]> => {
   try {
     const events = await getEventTypes();
     if (!events || events.length === 0) throw new Error("Nenhum evento encontrado!");

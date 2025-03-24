@@ -51,7 +51,7 @@ export default function AppointmentScreen() {
       const newDisabledDates: { [key: string]: any } = {};
 
       const today = new Date();
-      for (let i = 0; i < 30; i++) {
+      for (let i = 0; i < 120; i++) {
         const currentDate = new Date(today);
         currentDate.setDate(today.getDate() + i);
         const formattedDate = formatLocalDate(currentDate);
