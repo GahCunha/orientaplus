@@ -6,6 +6,7 @@ import EventGroup from "src/components/EventGroup";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useEffect, useState, useCallback } from "react";
 import { getUserId, listEvents } from "src/services/calendlyService";
+import { Button, Text } from "react-native";
 
 export default function Home() {
   const navigation = useNavigation();
@@ -20,7 +21,7 @@ export default function Home() {
       const userUri = await getUserId();
       if (!userUri) throw new Error("User ID não encontrado!");
 
-      // Lista os eventos filtrados (apenas eventos ativos)
+      // Lista os eventos ativos filtrados pelo invitee_email e pelo usuário
       const eventsData = await listEvents({
         user: userUri,
         status: "active",
@@ -31,7 +32,7 @@ export default function Home() {
       const events = eventsData.collection || [];
       const now = new Date();
 
-      // Eventos futuros (Atual): do mais próximo para o mais distante
+      // Eventos futuros: do mais próximo para o mais distante
       const upcoming = events
         .filter((event: any) => new Date(event.start_time) >= now)
         .sort(
@@ -39,7 +40,7 @@ export default function Home() {
             new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
         );
 
-      // Eventos passados (Histórico): do mais recente para o mais antigo
+      // Eventos passados: do mais recente para o mais antigo
       const past = events
         .filter((event: any) => new Date(event.start_time) < now)
         .sort(
@@ -56,12 +57,11 @@ export default function Home() {
     }
   }
 
-  // Chama fetchEvents na montagem da tela...
   useEffect(() => {
     fetchEvents();
   }, []);
 
-  // ...e também sempre que a tela voltar a ficar em foco.
+  // Atualiza os eventos sempre que a tela voltar a ficar em foco
   useFocusEffect(
     useCallback(() => {
       fetchEvents();
@@ -102,13 +102,11 @@ export default function Home() {
         ) : upcomingEvents.length > 0 ? (
           upcomingEvents.map((event, index) => {
             const dt = new Date(event.start_time);
-            // Usa toISOString().split("T")[0] para obter a data ISO (YYYY-MM-DD)
             const dateStr = dt.toISOString().split("T")[0];
             const timeStr = dt.toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",
             });
-            // Define o assunto, se existir
             const subject = event.meeting_notes_plain || event.name || "";
             const eventId = event.uri;
             return (
@@ -190,7 +188,6 @@ export default function Home() {
           />
         )}
       </EventGroup>
-
       <StatusBar style="auto" />
     </Container>
   );

@@ -33,3 +33,33 @@ export const calendarTheme = {
   textMonthFontFamily: theme.fonts.bold,
   textDayHeaderFontFamily: theme.fonts.regular,
 };
+
+export const ActiveEventContainer = styled.View`
+  min-height: auto;
+  padding: 20px;
+  background-color: ${theme.colors.card_background};
+  border-radius: 8px;
+  margin: 20px;
+`;
+
+export const ActiveEventTitle = styled.Text`
+  font-size: 16px;
+  font-family: ${theme.fonts.bold};
+  color: ${theme.colors.text};
+  margin-bottom: 10px;
+`;
+
+export const ActiveEventDetail = styled.Text`
+  font-size: 14px;
+  font-family: ${theme.fonts.regular};
+  color: ${theme.colors.text};
+  margin-bottom: 5px;
+`;
+
+export const ActiveEventMessage = styled.Text`
+  margin-top: 20px;
+  font-size: 14px;
+  font-family: ${theme.fonts.regular};
+  color: ${theme.colors.text};
+  text-align: center;
+`;
