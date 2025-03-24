@@ -2,9 +2,8 @@ import axios from "axios";
 
 const TOKEN = "eyJraWQiOiIxY2UxZTEzNjE3ZGNmNzY2YjNjZWJjY2Y4ZGM1YmFmYThhNjVlNjg0MDIzZjdjMzJiZTgzNDliMjM4MDEzNWI0IiwidHlwIjoiUEFUIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJodHRwczovL2F1dGguY2FsZW5kbHkuY29tIiwiaWF0IjoxNzQyMDYyNjA0LCJqdGkiOiIxMThiZmFkZS0yMWRlLTQ2MjEtOTRmZS04ODAwMDg2NjU2YzYiLCJ1c2VyX3V1aWQiOiI3NzM1MjJmNS1lYjEzLTQxOTItYmE5OC01ZTNmY2FmOGY3MGEifQ.VDJmr97HUCzRlHcqYef1EWYb_d25VIVUbOK4rlSmv-7XnHl3cJ2ygd3WVVNg_klJBs2QYnJMb8WQzfYAuANNyA";
 const API_BASE_URL = "https://api.calendly.com";
-
-/** 
- * 🔍 Busca o ID do usuário logado no Calendly 
+/**
+ * 🔍 Busca o ID do usuário logado no Calendly
  */
 export const getUserId = async (): Promise<string | null> => {
   try {
@@ -23,7 +22,7 @@ export const getUserId = async (): Promise<string | null> => {
   }
 };
 
-/** 
+/**
  * 🔍 Busca os eventos agendados do usuário
  */
 export const getUserScheduledEvents = async (
@@ -86,15 +85,28 @@ export const listEvents = async (options?: {
   organization?: string;
 }): Promise<any> => {
   let queryParams = `count=${options?.count || 20}`;
-  if (options?.group) queryParams += `&group=${encodeURIComponent(options.group)}`;
-  if (options?.invitee_email) queryParams += `&invitee_email=${encodeURIComponent(options.invitee_email)}`;
-  if (options?.page_token) queryParams += `&page_token=${encodeURIComponent(options.page_token)}`;
+  if (options?.group)
+    queryParams += `&group=${encodeURIComponent(options.group)}`;
+  if (options?.invitee_email)
+    queryParams += `&invitee_email=${encodeURIComponent(
+      options.invitee_email
+    )}`;
+  if (options?.page_token)
+    queryParams += `&page_token=${encodeURIComponent(options.page_token)}`;
   if (options?.sort) queryParams += `&sort=${encodeURIComponent(options.sort)}`;
-  if (options?.status) queryParams += `&status=${encodeURIComponent(options.status)}`;
+  if (options?.status)
+    queryParams += `&status=${encodeURIComponent(options.status)}`;
   if (options?.user) queryParams += `&user=${encodeURIComponent(options.user)}`;
-  if (options?.max_start_time) queryParams += `&max_start_time=${encodeURIComponent(options.max_start_time)}`;
-  if (options?.min_start_time) queryParams += `&min_start_time=${encodeURIComponent(options.min_start_time)}`;
-  if (options?.organization) queryParams += `&organization=${encodeURIComponent(options.organization)}`;
+  if (options?.max_start_time)
+    queryParams += `&max_start_time=${encodeURIComponent(
+      options.max_start_time
+    )}`;
+  if (options?.min_start_time)
+    queryParams += `&min_start_time=${encodeURIComponent(
+      options.min_start_time
+    )}`;
+  if (options?.organization)
+    queryParams += `&organization=${encodeURIComponent(options.organization)}`;
 
   const url = `${API_BASE_URL}/scheduled_events?${queryParams}`;
 
@@ -107,13 +119,16 @@ export const listEvents = async (options?: {
     });
     return data;
   } catch (error: any) {
-    console.error("Erro ao listar eventos:", error.response?.data || error.message);
+    console.error(
+      "Erro ao listar eventos:",
+      error.response?.data || error.message
+    );
     throw error;
   }
 };
 
-/** 
- * 🔍 Busca todos os tipos de evento do usuário e armazena em cache 
+/**
+ * 🔍 Busca todos os tipos de evento do usuário e armazena em cache
  */
 let cachedEventTypes: any[] | null = null;
 
@@ -139,15 +154,20 @@ export const getEventTypes = async (): Promise<any[]> => {
     console.log("✅ Tipos de evento encontrados:", cachedEventTypes);
     return cachedEventTypes;
   } catch (error) {
-    console.error("❌ Erro ao buscar tipos de eventos:", error.response?.data || error);
+    console.error(
+      "❌ Erro ao buscar tipos de eventos:",
+      error.response?.data || error
+    );
     return [];
   }
 };
 
-/** 
- * 🔍 Busca o ID de um evento específico pelo seu slug 
+/**
+ * 🔍 Busca o ID de um evento específico pelo seu slug
  */
-export const getEventTypeId = async (eventSlug: string): Promise<string | null> => {
+export const getEventTypeId = async (
+  eventSlug: string
+): Promise<string | null> => {
   try {
     const events = await getEventTypes();
     if (events.length === 0) throw new Error("❌ Nenhum evento encontrado!");
@@ -176,13 +196,16 @@ export const getEventTypeId = async (eventSlug: string): Promise<string | null> 
   }
 };
 
-/** 
+/**
  * ⏳ Busca os horários disponíveis do primeiro evento encontrado
  */
-export const getAvailableTimes = async (daysAhead: number = 120): Promise<any[]> => {
+export const getAvailableTimes = async (
+  daysAhead: number = 120
+): Promise<any[]> => {
   try {
     const events = await getEventTypes();
-    if (!events || events.length === 0) throw new Error("Nenhum evento encontrado!");
+    if (!events || events.length === 0)
+      throw new Error("Nenhum evento encontrado!");
 
     const eventType = events[0];
     const eventId = eventType.uri;
@@ -208,17 +231,20 @@ export const getAvailableTimes = async (daysAhead: number = 120): Promise<any[]>
       // Define o final do dia para 23:59:59.999
       endDate.setHours(23, 59, 59, 999);
 
-      const response = await axios.get(`${API_BASE_URL}/event_type_available_times`, {
-        headers: {
-          Authorization: `Bearer ${TOKEN}`,
-          "Content-Type": "application/json",
-        },
-        params: {
-          event_type: eventId,
-          start_time: startDate.toISOString(),
-          end_time: endDate.toISOString(),
-        },
-      });
+      const response = await axios.get(
+        `${API_BASE_URL}/event_type_available_times`,
+        {
+          headers: {
+            Authorization: `Bearer ${TOKEN}`,
+            "Content-Type": "application/json",
+          },
+          params: {
+            event_type: eventId,
+            start_time: startDate.toISOString(),
+            end_time: endDate.toISOString(),
+          },
+        }
+      );
 
       if (response.data.collection.length > 0) {
         allAvailableTimes = [...allAvailableTimes, ...response.data.collection];
@@ -227,25 +253,33 @@ export const getAvailableTimes = async (daysAhead: number = 120): Promise<any[]>
 
     return allAvailableTimes;
   } catch (error: any) {
-    console.error("❌ Erro ao buscar horários disponíveis:", error.response?.data || error);
+    console.error(
+      "❌ Erro ao buscar horários disponíveis:",
+      error.response?.data || error
+    );
     return [];
   }
 };
 
-
-
-/** 
+/**
  * 🔥 Cria um link de agendamento de uso único automaticamente
  */
 export async function createSchedulingLink() {
   try {
     const events = await getEventTypes();
     if (!events || events.length === 0) {
-      throw new Error("❌ Nenhum evento disponível para criar link de agendamento.");
+      throw new Error(
+        "❌ Nenhum evento disponível para criar link de agendamento."
+      );
     }
 
     const eventType = events[0];
-    console.log("✅ Evento selecionado automaticamente:", eventType.name, "-", eventType.uri);
+    console.log(
+      "✅ Evento selecionado automaticamente:",
+      eventType.name,
+      "-",
+      eventType.uri
+    );
 
     const requestBody = {
       owner: eventType.uri,
@@ -253,21 +287,33 @@ export async function createSchedulingLink() {
       max_event_count: 1,
     };
 
-    console.log("📤 Enviando requisição com body:", JSON.stringify(requestBody, null, 2));
+    console.log(
+      "📤 Enviando requisição com body:",
+      JSON.stringify(requestBody, null, 2)
+    );
 
-    const response = await axios.post(`${API_BASE_URL}/scheduling_links`, requestBody, {
-      headers: {
-        Authorization: `Bearer ${TOKEN}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axios.post(
+      `${API_BASE_URL}/scheduling_links`,
+      requestBody,
+      {
+        headers: {
+          Authorization: `Bearer ${TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-    console.log("📩 Resposta Completa do Calendly:", JSON.stringify(response.data, null, 2));
+    console.log(
+      "📩 Resposta Completa do Calendly:",
+      JSON.stringify(response.data, null, 2)
+    );
 
     const schedulingUrl = response.data?.resource?.booking_url || null;
 
     if (!schedulingUrl) {
-      throw new Error("❌ A API do Calendly não retornou um booking_url válido.");
+      throw new Error(
+        "❌ A API do Calendly não retornou um booking_url válido."
+      );
     }
 
     console.log("✅ Link de agendamento criado com sucesso:", schedulingUrl);
@@ -281,20 +327,25 @@ export async function createSchedulingLink() {
   }
 }
 
-
-export const cancelEvent = async (eventId: string, reason: string): Promise<any> => {
+export const cancelEvent = async (
+  eventId: string,
+  reason: string
+): Promise<any> => {
   // Extrai o UUID do eventId
   const uuid = eventId.split("/").pop();
   console.log("Tentando cancelar o evento com UUID:", uuid);
   const url = `${API_BASE_URL}/scheduled_events/${uuid}/cancellation`;
   console.log("URL de cancelamento:", url);
-  
-  const { data } = await axios.post(url, { reason }, {
-    headers: {
-      Authorization: `Bearer ${TOKEN}`,
-      "Content-Type": "application/json",
-    },
-  });
+
+  const { data } = await axios.post(
+    url,
+    { reason },
+    {
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
   return data;
 };
-
